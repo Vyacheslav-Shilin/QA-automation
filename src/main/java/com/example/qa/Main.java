@@ -2,17 +2,14 @@ package com.example.qa;
 
 public class Main {
     public static void main(String[] args) {
-        int[] statusCodes = {200, 404, 201, 500, 204};
+        int[] statusCodes = {200, 404, 201, 500, 299, 300};
         for (int statusCode : statusCodes) {
-            if (statusCode == 404) {
-                continue;
-            }
-            if (statusCode == 500) {
-                System.out.println("Server error, stopping");
-                break;
-            }
-            System.out.println("Checking status: " + statusCode);
+            boolean successful = isSuccessfulStatus(statusCode);
+            System.out.println("Status: " + statusCode + ", successful: " + successful);
         }
-        System.out.println("Check finished");
+    }
+
+    public static boolean isSuccessfulStatus(int statusCode) {
+        return statusCode >= 200 && statusCode <= 299;
     }
 }
