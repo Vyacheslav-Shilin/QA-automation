@@ -1,34 +1,19 @@
 package com.example.qa;
-import java.util.*;
-
 
 public class Main {
     public static void main(String[] args) {
+        User user = new User(201, "Anna", true);
 
-        List<String> currencies = new ArrayList<>();
-        currencies.add("USD");
-        currencies.add("EUR");
-        currencies.add("USD");
-        currencies.add("KZT");
 
-        System.out.println("List count: " + currencies.size());
 
-        Set<String> uniqueCurrencies = new LinkedHashSet<>();
-        for (String currency : currencies) {
-            uniqueCurrencies.add(currency);
-        }
+        User secondUser = new User(202, "Max", false);
 
-        System.out.println("Set count: " + uniqueCurrencies.size());
+        user.setName("Maria");
+        secondUser.setActive(true);
 
-        Map<String, String>  currencyNames = new LinkedHashMap<>();
-        currencyNames.put("USD", "US Dollar");
-        currencyNames.put("EUR", "Euro");
-        currencyNames.put("KZT", "Tenge");
-
-        for (String key : uniqueCurrencies) {
-            System.out.println(key + " = " + currencyNames.get(key));
-        }
-
+        System.out.println("User: " + user.getId() + ", name: " + user.getName() + ", active:" + user.isActive());
+        System.out.println("User: " + secondUser.getId() + ", name: " + secondUser.getName() + ", active:" + secondUser.isActive());
 
     }
 }
+
