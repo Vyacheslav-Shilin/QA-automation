@@ -90,8 +90,37 @@ public class PostApiTest {
         Assert.assertEquals(name, "Bob");
         Assert.assertEquals(city,"Astana");
 
+    }
 
+    @Test
+    public void shouldCreatePost(){
 
+        String requestBody = """
+        {
+          "title": "My first post",
+          "body": "Learning API testing",
+          "userId": 1
+        }
+        """;
+
+        Response response = RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/posts");
+                response.then()
+                .log().all()
+                .statusCode(201)
+                .contentType(ContentType.JSON)
+                .body("title", equalTo("My first post"))
+                .body("body", equalTo("Learning API testing"))
+                .body("userId",equalTo(1));
+
+        int createdId = response.jsonPath().getInt("id");
+        Assert.assertTrue(createdId > 0);
+        System.out.println("Created ID: " + createdId);
 
     }
+
 }
