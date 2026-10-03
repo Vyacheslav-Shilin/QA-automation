@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.equalTo;
 import io.restassured.http.ContentType;
 import static org.hamcrest.Matchers.lessThan;
 import io.restassured.response.Response;
+import static org.hamcrest.Matchers.anEmptyMap;
 
 public class PostApiTest {
 
@@ -182,5 +183,31 @@ public class PostApiTest {
                 .log().all()
                 .statusCode(200);
 
+    }
+
+    @Test
+    public void shouldReturn404ForMissingPost() {
+        RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .when()
+                .get("/posts/9999")
+                .then()
+                .log().all()
+                .statusCode(404)
+                .contentType(ContentType.JSON)
+                .body("$", anEmptyMap());
+    }
+
+    @Test
+    public void shouldReturn404ForUnknownRoute() {
+        RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .when()
+                .get("/unknown-route")
+                .then()
+                .log().all()
+                .statusCode(404)
+                .contentType(ContentType.JSON)
+                .body("$", anEmptyMap());
     }
 }
