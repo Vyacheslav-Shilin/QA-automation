@@ -123,4 +123,64 @@ public class PostApiTest {
 
     }
 
+    @Test
+    public void shouldUpdatePost() {
+        String requestBody = """
+        {
+          "id": 1,
+          "title": "Updated title",
+          "body": "Updated text",
+          "userId": 1
+        }
+        """;
+        RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .put("/posts/1")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id",equalTo(1))
+                .body("title", equalTo("Updated title"))
+                .body("body", equalTo("Updated text"))
+                .body("userId",equalTo(1));
+
+    }
+
+    @Test
+    public void shouldPatchPostTitle() {
+        String requestBody = """
+        {
+          "title": "Patched title"
+        }
+        """;
+                RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .patch("/posts/1")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id",equalTo(1))
+                .body("title", equalTo("Patched title"))
+                .body("userId",equalTo(1));
+    }
+
+    @Test
+    public void shouldDeletePost() {
+                RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .when()
+                .delete("/posts/1")
+                .then()
+                .log().all()
+                .statusCode(200);
+
+    }
 }
