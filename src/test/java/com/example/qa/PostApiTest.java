@@ -9,13 +9,21 @@ import io.restassured.http.ContentType;
 import static org.hamcrest.Matchers.lessThan;
 import io.restassured.response.Response;
 import static org.hamcrest.Matchers.anEmptyMap;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import org.testng.annotations.BeforeMethod;
 
 public class PostApiTest {
+
+    RequestSpecification spec = new RequestSpecBuilder()
+            .setBaseUri("https://jsonplaceholder.typicode.com")
+            .addHeader("Accept", "application/json")
+            .build();
 
     @Test
     public void shouldGetPostById() {
         RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .when()
                 .get("/posts/1")
                 .then()
@@ -30,7 +38,7 @@ public class PostApiTest {
     @Test
     public void shouldGetSecondPost() {
         RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .when()
                 .get("/posts/2")
                 .then()
@@ -45,7 +53,7 @@ public class PostApiTest {
     @Test
     public void shouldExtractPostData () {
         Response response = RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .when()
                 .get("/posts/1");
         response.then().statusCode(200);
@@ -105,7 +113,7 @@ public class PostApiTest {
         """;
 
         Response response = RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -135,7 +143,7 @@ public class PostApiTest {
         }
         """;
         RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -159,7 +167,7 @@ public class PostApiTest {
         }
         """;
                 RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                        .spec(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -176,7 +184,7 @@ public class PostApiTest {
     @Test
     public void shouldDeletePost() {
                 RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                        .spec(spec)
                 .when()
                 .delete("/posts/1")
                 .then()
@@ -188,7 +196,7 @@ public class PostApiTest {
     @Test
     public void shouldReturn404ForMissingPost() {
         RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .when()
                 .get("/posts/9999")
                 .then()
@@ -201,7 +209,7 @@ public class PostApiTest {
     @Test
     public void shouldReturn404ForUnknownRoute() {
         RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com")
+                .spec(spec)
                 .when()
                 .get("/unknown-route")
                 .then()
