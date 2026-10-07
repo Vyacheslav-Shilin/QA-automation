@@ -104,13 +104,8 @@ public class PostApiTest {
     @Test
     public void shouldCreatePost(){
 
-        String requestBody = """
-        {
-          "title": "My first post",
-          "body": "Learning API testing",
-          "userId": 1
-        }
-        """;
+        CreatePostRequest requestBody = new CreatePostRequest(
+                "My first post", "Learning API testing", 1);
 
         Response response = RestAssured.given()
                 .spec(spec)
@@ -121,14 +116,15 @@ public class PostApiTest {
                 response.then()
                 .log().all()
                 .statusCode(201)
-                .contentType(ContentType.JSON)
-                .body("title", equalTo("My first post"))
-                .body("body", equalTo("Learning API testing"))
-                .body("userId",equalTo(1));
+                .contentType(ContentType.JSON);
 
-        int createdId = response.jsonPath().getInt("id");
-        Assert.assertTrue(createdId > 0);
-        System.out.println("Created ID: " + createdId);
+        PostResponse post = response.as(PostResponse.class);
+        Assert.assertEquals(post.getTitle(),"My first post");
+        Assert.assertEquals(post.getBody(), "Learning API testing");
+        Assert.assertEquals(post.getUserId(),1);
+        Assert.assertTrue(post.getId() > 0);
+
+        System.out.println("Created ID: " + post.getId());
 
     }
 
