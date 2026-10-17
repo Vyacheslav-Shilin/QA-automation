@@ -20,6 +20,29 @@ public class BookingApiTest {
     @Test
     public void shouldCreateGetAndDeleteBooking() {
 
+        String authBody = """
+                {
+                  "username": "admin",
+                  "password": "password123"
+                }
+                """;
+
+
+        Response authResponce = RestAssured.given()
+                .spec(spec)
+                .contentType(ContentType.JSON)
+                .body(authBody)
+                .when()
+                .post("/auth");
+        authResponce.then()
+                .statusCode(200)
+                .contentType(ContentType.JSON);
+
+        String token = authResponce.jsonPath().getString("token");
+
+        Assert.assertNotNull(token, "В ответе отсутствует token");
+        Assert.assertFalse(token.isBlank(), "Токен пустой");
+
         String requestBody = """
                 {
                   "firstname": "Alice",
@@ -71,7 +94,24 @@ public class BookingApiTest {
 
         RestAssured.given()
                 .spec(spec)
-                .auth().preemptive().basic("admin", "password123")
+                .cookie("token", "invalid-token")
+                .when()
+                .delete("/booking/" + bookingId)
+                .then()
+                .log().all()
+                .statusCode(403);
+
+        RestAssured.given()
+                .spec(spec)
+                .when()
+                .get("/booking/" + bookingId)
+                .then()
+                .log().all()
+                .statusCode(200);
+
+        RestAssured.given()
+                .spec(spec)
+                .cookie("token", token)
                 .when()
                 .delete("/booking/" + bookingId)
                 .then()
@@ -86,6 +126,34 @@ public class BookingApiTest {
                 .log().all()
                 .statusCode(404);
 
+
+    }
+
+    @Test
+    public void shouldCreateAuthToken() {
+
+        String authBody = """
+                {
+                  "username": "admin",
+                  "password": "password123"
+                }
+                """;
+
+
+        Response authResponce = RestAssured.given()
+                .spec(spec)
+                .contentType(ContentType.JSON)
+                .body(authBody)
+                .when()
+                .post("/auth");
+        authResponce.then()
+                .statusCode(200)
+                .contentType(ContentType.JSON);
+
+        String token = authResponce.jsonPath().getString("token");
+
+        Assert.assertNotNull(token, "В ответе отсутствует token");
+        Assert.assertFalse(token.isBlank(), "Токен пустой");
 
     }
 
