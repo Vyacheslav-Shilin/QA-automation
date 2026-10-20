@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.anEmptyMap;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 
 public class PostApiTest {
 
@@ -214,4 +215,55 @@ public class PostApiTest {
                 .contentType(ContentType.JSON)
                 .body("$", anEmptyMap());
     }
+
+    @DataProvider(name = "postData")
+    public Object[][] postData() {
+        return new Object[][] {
+                {1, 1},
+                {2, 1},
+                {3, 1}
+        };
+    }
+
+    @Test(dataProvider = "postData")
+    public void shouldGetPostWithDataProvider(int postId, int expectedUserId) {
+
+        System.out.println(
+                "Проверяем postId=" + postId
+                        + ", ожидаем userId=" + expectedUserId
+        );
+
+        RestAssured.given()
+                .spec(spec)
+                .when()
+                .get("/posts/" + postId)
+                .then()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .body("id", equalTo(postId))
+                .body("userId", equalTo(expectedUserId));
+
+    }
+
+    @DataProvider(name = "missingRoutes")
+    public Object[][] missingRoutes() {
+        return new Object[][] {
+                {"/unknown-route"},
+                {"/another-missing-route"}
+        };
+    }
+
+    @Test(dataProvider = "missingRoutes")
+    public void shouldReturn404ForMissingRoutes(String route) {
+
+        RestAssured.given()
+                .spec(spec)
+                .when()
+                .get(route)
+                .then()
+                .statusCode(404);
+
+    }
+
+
 }
