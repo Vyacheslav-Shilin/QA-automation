@@ -1,7 +1,5 @@
 package com.example.qa.tests;
 
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.Test;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -10,11 +8,12 @@ import org.testng.Assert;
 import static org.hamcrest.Matchers.equalTo;
 
 
-public class BookingApiTest {
-    RequestSpecification spec = new RequestSpecBuilder()
-            .setBaseUri("https://restful-booker.herokuapp.com")
-            .addHeader("Accept", "application/json")
-            .build();
+public class BookingApiTest extends BaseTest {
+
+    @Override
+    protected String getBaseUri() {
+        return "https://restful-booker.herokuapp.com";
+    }
 
 
     @Test

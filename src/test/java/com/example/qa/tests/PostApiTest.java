@@ -11,16 +11,15 @@ import io.restassured.http.ContentType;
 import static org.hamcrest.Matchers.lessThan;
 import io.restassured.response.Response;
 import static org.hamcrest.Matchers.anEmptyMap;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.DataProvider;
 
-public class PostApiTest {
+public class PostApiTest  extends BaseTest {
 
-    RequestSpecification spec = new RequestSpecBuilder()
-            .setBaseUri("https://jsonplaceholder.typicode.com")
-            .addHeader("Accept", "application/json")
-            .build();
+
+    @Override
+    protected String getBaseUri() {
+        return "https://jsonplaceholder.typicode.com";
+    }
 
     @Test
     public void shouldGetPostById() {
