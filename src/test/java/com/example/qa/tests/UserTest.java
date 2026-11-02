@@ -1,5 +1,6 @@
-package com.example.qa;
+package com.example.qa.tests;
 
+import com.example.qa.User;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;

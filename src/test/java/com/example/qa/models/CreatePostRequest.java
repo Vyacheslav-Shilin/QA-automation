@@ -1,4 +1,4 @@
-package com.example.qa;
+package com.example.qa.models;
 
 public class CreatePostRequest {
 

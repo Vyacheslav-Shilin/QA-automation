@@ -1,5 +1,7 @@
-package com.example.qa;
+package com.example.qa.tests;
 
+import com.example.qa.models.CreatePostRequest;
+import com.example.qa.models.PostResponse;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.testng.Assert;
@@ -11,7 +13,6 @@ import io.restassured.response.Response;
 import static org.hamcrest.Matchers.anEmptyMap;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 
 public class PostApiTest {

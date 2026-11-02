@@ -1,4 +1,4 @@
-package com.example.qa;
+package com.example.qa.tests;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;

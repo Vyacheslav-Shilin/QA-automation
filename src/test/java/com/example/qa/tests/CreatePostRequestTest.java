@@ -1,4 +1,5 @@
-package com.example.qa;
+package com.example.qa.tests;
+import com.example.qa.models.CreatePostRequest;
 import io.restassured.path.json.JsonPath;
 import org.testng.annotations.Test;
 import org.testng.Assert;
