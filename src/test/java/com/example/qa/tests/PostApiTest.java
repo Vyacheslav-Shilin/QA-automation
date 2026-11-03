@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.lessThan;
 import io.restassured.response.Response;
 import static org.hamcrest.Matchers.anEmptyMap;
 import org.testng.annotations.DataProvider;
+import com.example.qa.clients.PostClient;
 
 public class PostApiTest  extends BaseTest {
 
@@ -23,11 +24,9 @@ public class PostApiTest  extends BaseTest {
 
     @Test
     public void shouldGetPostById() {
-        RestAssured.given()
-                .spec(spec)
-                .when()
-                .get("/posts/1")
-                .then()
+        PostClient postClient = new PostClient(spec);
+        Response response = postClient.getPostById(1);
+                response.then()
                 .header("x-content-type-options", equalTo("nosniff"))
                 .contentType(ContentType.JSON)
                 .statusCode(200)
@@ -38,25 +37,23 @@ public class PostApiTest  extends BaseTest {
 
     @Test
     public void shouldGetSecondPost() {
-        RestAssured.given()
-                .spec(spec)
-                .when()
-                .get("/posts/2")
-                .then()
+
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.getPostById(2);
+                response.then()
                 .header("x-content-type-options", equalTo("nosniff"))
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("id", equalTo(2))
                 .body("userId", equalTo(1))
                 .time(lessThan(5000L));
+
     }
 
     @Test
     public void shouldExtractPostData () {
-        Response response = RestAssured.given()
-                .spec(spec)
-                .when()
-                .get("/posts/1");
+        PostClient postClient = new PostClient(spec);
+        Response response = postClient.getPostById(1);
         response.then().statusCode(200);
         JsonPath data = response.jsonPath();
         int id = data.getInt("id");
@@ -108,12 +105,8 @@ public class PostApiTest  extends BaseTest {
         CreatePostRequest requestBody = new CreatePostRequest(
                 "My first post", "Learning API testing", 1);
 
-        Response response = RestAssured.given()
-                .spec(spec)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post("/posts");
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.createPost(requestBody);
                 response.then()
                 .log().all()
                 .statusCode(201)
@@ -139,13 +132,10 @@ public class PostApiTest  extends BaseTest {
           "userId": 1
         }
         """;
-        RestAssured.given()
-                .spec(spec)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .put("/posts/1")
-                .then()
+
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.updatePost(1, requestBody);
+                response.then()
                 .log().all()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -163,13 +153,9 @@ public class PostApiTest  extends BaseTest {
           "title": "Patched title"
         }
         """;
-                RestAssured.given()
-                        .spec(spec)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .patch("/posts/1")
-                .then()
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.patchPost(1, requestBody);
+                response.then()
                 .log().all()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -180,11 +166,9 @@ public class PostApiTest  extends BaseTest {
 
     @Test
     public void shouldDeletePost() {
-                RestAssured.given()
-                        .spec(spec)
-                .when()
-                .delete("/posts/1")
-                .then()
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.deletePost(1);
+                response.then()
                 .log().all()
                 .statusCode(200);
 
@@ -192,11 +176,9 @@ public class PostApiTest  extends BaseTest {
 
     @Test
     public void shouldReturn404ForMissingPost() {
-        RestAssured.given()
-                .spec(spec)
-                .when()
-                .get("/posts/9999")
-                .then()
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.getPostById(9999);
+                response.then()
                 .log().all()
                 .statusCode(404)
                 .contentType(ContentType.JSON)
@@ -233,11 +215,9 @@ public class PostApiTest  extends BaseTest {
                         + ", ожидаем userId=" + expectedUserId
         );
 
-        RestAssured.given()
-                .spec(spec)
-                .when()
-                .get("/posts/" + postId)
-                .then()
+                PostClient postClient = new PostClient(spec);
+                Response response = postClient.getPostById(postId);
+                response.then()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("id", equalTo(postId))
