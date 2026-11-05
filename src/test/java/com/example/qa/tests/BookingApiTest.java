@@ -6,13 +6,14 @@ import io.restassured.response.Response;
 import io.restassured.http.ContentType;
 import org.testng.Assert;
 import static org.hamcrest.Matchers.equalTo;
+import com.example.qa.config.Config;
 
 
 public class BookingApiTest extends BaseTest {
 
     @Override
     protected String getBaseUri() {
-        return "https://restful-booker.herokuapp.com";
+        return Config.get("booking.base.url");
     }
 
 

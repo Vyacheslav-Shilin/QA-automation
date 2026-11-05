@@ -13,13 +13,14 @@ import io.restassured.response.Response;
 import static org.hamcrest.Matchers.anEmptyMap;
 import org.testng.annotations.DataProvider;
 import com.example.qa.clients.PostClient;
+import com.example.qa.config.Config;
 
 public class PostApiTest  extends BaseTest {
 
 
     @Override
     protected String getBaseUri() {
-        return "https://jsonplaceholder.typicode.com";
+        return Config.get("posts.base.url");
     }
 
     @Test
