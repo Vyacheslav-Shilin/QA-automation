@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.qameta.allure.Allure;
 
 public class CreatePostRequestTest {
 
@@ -36,11 +37,16 @@ public class CreatePostRequestTest {
         CreatePostRequest request = new CreatePostRequest("My first post","Learning API testing",1);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(request);
+        Allure.attachment("JSON после сериализации", "application/json", json);
         System.out.println(json);
         JsonPath data = new JsonPath(json);
-        Assert.assertEquals(data.getString("title"),"My first post");
-        Assert.assertEquals(data.getString("body"),"Learning API testing");
-        Assert.assertEquals(data.getInt("userId"),1);
+
+        Allure.step("Проверить поля JSON после сериализации", () -> {
+            Assert.assertEquals(data.getString("title"), "My first post");
+            Assert.assertEquals(data.getString("body"), "Learning API testing");
+            Assert.assertEquals(data.getInt("userId"), 1);
+        });
+
     }
 
 }
