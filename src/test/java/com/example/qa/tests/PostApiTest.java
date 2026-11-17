@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.anEmptyMap;
 import org.testng.annotations.DataProvider;
 import com.example.qa.clients.PostClient;
 import com.example.qa.config.Config;
+import io.qameta.allure.Allure;
 
 public class PostApiTest  extends BaseTest {
 
@@ -108,16 +109,21 @@ public class PostApiTest  extends BaseTest {
 
                 PostClient postClient = new PostClient(spec);
                 Response response = postClient.createPost(requestBody);
+                Allure.attachment(
+                "Ответ создания поста",
+                "application/json",
+                response.asString()
+                );
                 response.then()
-                .log().all()
+                .log().ifValidationFails()
                 .statusCode(201)
                 .contentType(ContentType.JSON);
 
         PostResponse post = response.as(PostResponse.class);
-        Assert.assertEquals(post.getTitle(),"My first post");
-        Assert.assertEquals(post.getBody(), "Learning API testing");
-        Assert.assertEquals(post.getUserId(),1);
-        Assert.assertTrue(post.getId() > 0);
+        Assert.assertEquals(post.getBody(), requestBody.getBody(), "Текст созданного поста должен совпадать с отправленным");
+        Assert.assertEquals(post.getUserId(), requestBody.getUserId(), "userId в ответе должен совпадать с отправленным");
+        Assert.assertTrue(post.getId() > 0, "ID созданного поста должен быть больше нуля. Получено: " + post.getId());
+        Assert.assertEquals(post.getTitle(),requestBody.getTitle(), "Заголовок созданного поста должен совпадать с отправленным");
 
         System.out.println("Created ID: " + post.getId());
 
