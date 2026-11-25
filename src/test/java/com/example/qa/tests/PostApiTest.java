@@ -210,7 +210,8 @@ public class PostApiTest  extends BaseTest {
         return new Object[][] {
                 {1, 1},
                 {2, 1},
-                {3, 1}
+                {3, 1},
+                {11, 2}
         };
     }
 
